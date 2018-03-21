@@ -67,12 +67,12 @@ void MyViewer::build_scene ()
 	ground.N.size(2);
 	ground.V[0] = GsVec(1, 0, 1);
 	ground.V[1] = GsVec(1, 0, -1);
-	ground.V[2] = GsVec(-1, 0, 1);
-	ground.V[3] = GsVec(-1, 0, -1);
+	ground.V[2] = GsVec(-1, 0, -1);
+	ground.V[3] = GsVec(-1, 0, 1);
 	ground.F[0] = GsModel::Face(0, 1, 2);
-	ground.F[1] = GsModel::Face(1, 3, 2);
-	ground.N[0] = GsVec(1, 0, 1);
-	ground.N[1] = GsVec(1, 0, -1);
+	ground.F[1] = GsModel::Face(2, 3, 0);
+	ground.N[0] = GsVec(0, 1, 0);
+	ground.N[1] = GsVec(0, 1, 0);
 	//ground.N[2] = GsVec(-1, 0, 1);
 	//ground.N[3] = GsVec(-1, 0, -1);
 	
@@ -115,25 +115,25 @@ void MyViewer::build_scene ()
 
 	//this is the grass texture 
 	//some change
-	/*
-	{
+	//Changing material seems to do some stuff. PerGroup crashes the program. Flat doesnt work well, but i could get smooth to kind of work.
+	
 		GsModel::Group& g = *ground.G.push();
 		g.fi = 0;
 		g.fn = ground.F.size();
 		g.dmap = new GsModel::Texture;
-		g.dmap->fname.set("../../textures/grass.png");
+		g.dmap->fname.set("../../textures/checker.png");
 		ground.M.push().init();
 
-		int nv = ground.V.size();
-		ground.T.size(nv);
-		ground.T[0].set(0, 0);
-		ground.T[1].set(0, 1);
-		ground.T[2].set(1, 1);
-		ground.T[3].set(1, 0);
-
-		//ground.set_mode(GsModel::Flat, GsModel::PerGroupMtl);
-		ground.textured = true;
-	}
+		
+		ground.T.size(4);
+		ground.T[0].set(1, 1);
+		ground.T[1].set(1, 0);
+		ground.T[2].set(0, 0);
+		ground.T[3].set(0, 1);
+		
+		ground.set_mode(GsModel::Flat, GsModel::NoMtl);
+		ground.textured = false;
+	/*
 	
 	
 	rootg()->add(g1);
