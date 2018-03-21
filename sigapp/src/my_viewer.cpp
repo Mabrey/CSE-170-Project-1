@@ -9,11 +9,7 @@
 
 # include <sigogl/ws_run.h>
 
-double bigR, littleR;
-int resolution;
 
-void make_torus(GsModel*, double, double, int);
-SnLines* computeSegments(bool, GsModel*);
 
 MyViewer::MyViewer ( int x, int y, int w, int h, const char* l ) : WsViewer(x,y,w,h,l)
 {
