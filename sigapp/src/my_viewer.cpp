@@ -1,5 +1,6 @@
 
 # include "my_viewer.h"
+# include "bender.h"
 
 # include <sigogl/ui_button.h>
 # include <sigogl/ui_radio_button.h>
@@ -50,19 +51,58 @@ void MyViewer::add_model ( SnShape* s, GsVec p )
 void MyViewer::build_scene ()
 {
 	
-	GsModel* Bender = new GsModel;
-	Bender->load_obj("../../objects/bender2.obj");
+	GsModel* bender_head = new GsModel;
+	GsModel* bender_torso = new GsModel;
+	GsModel* bender_left_arm = new GsModel;
+	GsModel* bender_right_arm = new GsModel;
+	GsModel* bender_left_leg = new GsModel;
+	GsModel* bender_right_leg = new GsModel;
+
+	init_bender_models(*bender_head, *bender_torso, *bender_left_arm,
+		*bender_right_arm, *bender_left_leg, *bender_right_leg);
 
 	SnGroup *g1 = new SnGroup;
-	g1->separator(true);
-	g1->add(new SnModel(Bender));
-	g1->top<SnModel>()->color(GsColor::yellow);
-	//Bender->set_mode(GsModel::Smooth, GsModel::PerGroupMtl);
-	//Bender->textured = true;
-	rootg()->add(g1);
+	SnGroup *g2 = new SnGroup;
+	SnGroup *g3 = new SnGroup;
+	SnGroup *g4 = new SnGroup;
+	SnGroup *g5 = new SnGroup;
+	SnGroup *g6 = new SnGroup;
 
-	gsout << "Normals: " << Bender->N.size() << gsnl;
-	gsout << "Vertices: " << Bender->V.size() << gsnl;
+	g1->separator(true);
+	g1->add(new SnModel(bender_head));
+	g1->top<SnModel>()->color(GsColor::gray);
+
+	g2->separator(true);
+	g2->add(new SnModel(bender_torso));
+	g2->top<SnModel>()->color(GsColor::gray);
+
+	g3->separator(true);
+	g3->add(new SnModel(bender_left_arm));
+	g3->top<SnModel>()->color(GsColor::gray);
+
+	g4->separator(true);
+	g4->add(new SnModel(bender_right_arm));
+	g4->top<SnModel>()->color(GsColor::gray);
+
+	g5->separator(true);
+	g5->add(new SnModel(bender_left_leg));
+	g5->top<SnModel>()->color(GsColor::gray);
+
+	g6->separator(true);
+	g6->add(new SnModel(bender_right_leg));
+	g6->top<SnModel>()->color(GsColor::gray);
+
+
+
+	rootg()->add(g1);
+	rootg()->add(g2);
+	rootg()->add(g3);
+	rootg()->add(g4);
+	rootg()->add(g5);
+	rootg()->add(g6);
+
+	//gsout << "Normals: " << Bender->N.size() << gsnl;
+	//gsout << "Vertices: " << Bender->V.size() << gsnl;
 
 }
 

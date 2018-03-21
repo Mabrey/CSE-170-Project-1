@@ -19,6 +19,7 @@
     <ClCompile Include="..\src\my_viewer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\bender.h" />
     <ClInclude Include="..\src\my_viewer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
