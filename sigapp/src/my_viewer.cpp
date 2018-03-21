@@ -55,10 +55,10 @@ void MyViewer::build_scene ()
 {
 	
 //testing 1 2 3
-
+/*
 	GsModel* Bender = new GsModel;
 
-	Bender->load_obj("../../objects/ Bender.obj");
+	Bender->load_obj("../../objects/Bender.obj");
 
 	SnGroup *g1 = new SnGroup;
 	g1->separator(true);
@@ -68,7 +68,7 @@ void MyViewer::build_scene ()
 	Bender->textured = true;
 
 	rootg()->add(g1);
-
+	*/
 }
 
 // Below is an example of how to control the main loop of an animation:
