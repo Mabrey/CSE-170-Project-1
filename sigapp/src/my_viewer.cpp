@@ -56,8 +56,8 @@ void MyViewer::build_scene ()
 	SnGroup *g1 = new SnGroup;
 	g1->separator(true);
 	g1->add(new SnModel(Bender));
-	//g1->top<SnModel>()->color(GsColor::yellow);
-	Bender->set_mode(GsModel::Smooth, GsModel::PerGroupMtl);
+	g1->top<SnModel>()->color(GsColor::yellow);
+	//Bender->set_mode(GsModel::Smooth, GsModel::PerGroupMtl);
 	//Bender->textured = true;
 	rootg()->add(g1);
 
