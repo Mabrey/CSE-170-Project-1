@@ -49,27 +49,18 @@ void MyViewer::add_model ( SnShape* s, GsVec p )
 
 void MyViewer::build_scene ()
 {
-	SnPrimitive* p;
+	
+	GsModel* Bender = new GsModel;
+	Bender->load_obj("../../objects/Bender.obj");
 
-	p = new SnPrimitive(GsPrimitive::Box,1,3,1);
-	p->prim().material.diffuse=GsColor::yellow;
-	add_model ( p, GsVec(0,0,0) );
+	SnGroup *g1 = new SnGroup;
+	g1->separator(true);
+	g1->add(new SnModel(Bender));
+	g1->top<SnModel>()->color(GsColor::yellow);
+	//Bender->set_mode(GsModel::Smooth, GsModel::PerGroupMtl);
+	//Bender->textured = true;
+	rootg()->add(g1);
 
-	p = new SnPrimitive(GsPrimitive::Sphere,2);
-	p->prim().material.diffuse=GsColor::red;
-	add_model ( p, GsVec(-4,0,0) );
-
-	p = new SnPrimitive(GsPrimitive::Cylinder,1.0,1.0,1.5);
-	p->prim().material.diffuse=GsColor::blue;
-	add_model ( p, GsVec(4,0,0) );
-
-	p = new SnPrimitive(GsPrimitive::Capsule,1,1,3);
-	p->prim().material.diffuse=GsColor::red;
-	add_model ( p, GsVec(8,0,0) );
-
-	p = new SnPrimitive(GsPrimitive::Ellipsoid,2.0,0.5);
-	p->prim().material.diffuse=GsColor::green;
-	add_model ( p, GsVec(-8,0,0) );
 }
 
 // Below is an example of how to control the main loop of an animation:
