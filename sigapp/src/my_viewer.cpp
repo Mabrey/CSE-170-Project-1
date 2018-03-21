@@ -58,6 +58,26 @@ void MyViewer::build_scene ()
 	GsModel* bender_left_leg = new GsModel;
 	GsModel* bender_right_leg = new GsModel;
 
+	SnModel*sn = new SnModel;
+	GsModel& ground = *sn->model();
+	rootg()->add(sn);
+
+	ground.V.size(4);
+	ground.F.size(2);
+	ground.N.size(2);
+	ground.V[0] = GsVec(1, 0, 1);
+	ground.V[1] = GsVec(1, 0, -1);
+	ground.V[2] = GsVec(-1, 0, 1);
+	ground.V[3] = GsVec(-1, 0, -1);
+	ground.F[0] = GsModel::Face(0, 1, 2);
+	ground.F[1] = GsModel::Face(1, 3, 2);
+	ground.N[0] = GsVec(1, 0, 1);
+	ground.N[1] = GsVec(1, 0, -1);
+	//ground.N[2] = GsVec(-1, 0, 1);
+	//ground.N[3] = GsVec(-1, 0, -1);
+	
+
+
 	init_bender_models(*bender_head, *bender_torso, *bender_left_arm,
 		*bender_right_arm, *bender_left_leg, *bender_right_leg);
 
@@ -67,6 +87,7 @@ void MyViewer::build_scene ()
 	SnGroup *g4 = new SnGroup;
 	SnGroup *g5 = new SnGroup;
 	SnGroup *g6 = new SnGroup;
+	//SnGroup *g7 = new SnGroup;
 
 	g1->separator(true);
 	g1->add(new SnModel(bender_head));
@@ -92,15 +113,36 @@ void MyViewer::build_scene ()
 	g6->add(new SnModel(bender_right_leg));
 	g6->top<SnModel>()->color(GsColor::gray);
 
+	//this is the grass texture 
+	//some change
+	/*
+	{
+		GsModel::Group& g = *ground.G.push();
+		g.fi = 0;
+		g.fn = ground.F.size();
+		g.dmap = new GsModel::Texture;
+		g.dmap->fname.set("../../textures/grass.png");
+		ground.M.push().init();
 
+		int nv = ground.V.size();
+		ground.T.size(nv);
+		ground.T[0].set(0, 0);
+		ground.T[1].set(0, 1);
+		ground.T[2].set(1, 1);
+		ground.T[3].set(1, 0);
 
+		//ground.set_mode(GsModel::Flat, GsModel::PerGroupMtl);
+		ground.textured = true;
+	}
+	
+	
 	rootg()->add(g1);
 	rootg()->add(g2);
 	rootg()->add(g3);
 	rootg()->add(g4);
 	rootg()->add(g5);
 	rootg()->add(g6);
-
+	*/
 	//gsout << "Normals: " << Bender->N.size() << gsnl;
 	//gsout << "Vertices: " << Bender->V.size() << gsnl;
 
