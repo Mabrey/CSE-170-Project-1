@@ -52,7 +52,7 @@ void MyViewer::add_model ( SnShape* s, GsVec p )
 void MyViewer::build_scene ()
 {
 	
-//testing 1 2 3
+
 
 }
 
