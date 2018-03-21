@@ -81,37 +81,59 @@ void MyViewer::build_scene ()
 	init_bender_models(*bender_head, *bender_torso, *bender_left_arm,
 		*bender_right_arm, *bender_left_leg, *bender_right_leg);
 
-	SnGroup *g1 = new SnGroup;
-	SnGroup *g2 = new SnGroup;
-	SnGroup *g3 = new SnGroup;
-	SnGroup *g4 = new SnGroup;
-	SnGroup *g5 = new SnGroup;
-	SnGroup *g6 = new SnGroup;
+	SnGroup *group_head = new SnGroup;
+	SnGroup *group_torso = new SnGroup;
+	SnGroup *group_left_arm = new SnGroup;
+	SnGroup *group_right_arm = new SnGroup;
+	SnGroup *group_left_leg = new SnGroup;
+	SnGroup *group_right_leg = new SnGroup;
+	SnTransform* transf_head, *transf_torso, *transf_left_arm, *transf_right_arm, *transf_left_leg, *transf_right_leg;
+	SnManipulator* main_manip = new SnManipulator;
 	//SnGroup *g7 = new SnGroup;
 
-	g1->separator(true);
-	g1->add(new SnModel(bender_head));
-	g1->top<SnModel>()->color(GsColor::gray);
+	group_head->separator(true);
+	group_head->add(transf_head = new SnTransform);
+	group_head->add(new SnModel(bender_head));
+	group_head->top<SnModel>()->color(GsColor::gray);
+	transf_head->get().translation(0, 2.7f, 0);
 
-	g2->separator(true);
-	g2->add(new SnModel(bender_torso));
-	g2->top<SnModel>()->color(GsColor::gray);
+	group_torso->separator(true);
+	group_torso->add(transf_torso = new SnTransform);
+	group_torso->add(new SnModel(bender_torso));
+	group_torso->top<SnModel>()->color(GsColor::gray);
+	transf_torso->get().translation(0, 8.25f, 0);
 
-	g3->separator(true);
-	g3->add(new SnModel(bender_left_arm));
-	g3->top<SnModel>()->color(GsColor::gray);
 
-	g4->separator(true);
-	g4->add(new SnModel(bender_right_arm));
-	g4->top<SnModel>()->color(GsColor::gray);
+	group_left_arm->separator(true);
+	group_left_arm->add(transf_left_arm = new SnTransform);
+	group_left_arm->add(new SnModel(bender_left_arm));
+	group_left_arm->top<SnModel>()->color(GsColor::gray);
+	transf_left_arm->get().translation(4.5f, 0.8f, 0);
 
-	g5->separator(true);
-	g5->add(new SnModel(bender_left_leg));
-	g5->top<SnModel>()->color(GsColor::gray);
+	group_right_arm->separator(true);
+	group_right_arm->add(transf_right_arm = new SnTransform);
+	group_right_arm->add(new SnModel(bender_right_arm));
+	group_right_arm->top<SnModel>()->color(GsColor::gray);
+	transf_right_arm->get().translation(-4.4f, 0.92f, 0);
 
-	g6->separator(true);
-	g6->add(new SnModel(bender_right_leg));
-	g6->top<SnModel>()->color(GsColor::gray);
+	group_left_leg->separator(true);
+	group_left_leg->add(transf_left_leg = new SnTransform);
+	group_left_leg->add(new SnModel(bender_left_leg));
+	group_left_leg->top<SnModel>()->color(GsColor::gray);
+	transf_left_leg->get().translation(1.2f, -8.32f, 0);
+
+	group_right_leg->separator(true);
+	group_right_leg->add(transf_right_leg = new SnTransform);
+	group_right_leg->add(new SnModel(bender_right_leg));
+	group_right_leg->top<SnModel>()->color(GsColor::gray);
+	transf_right_leg->get().translation(-1.2f, -8.4f, 0);
+
+	//assembles each group onto the torso group to make the full model
+	group_torso->add_group(group_head);
+	group_torso->add_group(group_left_arm);
+	group_torso->add_group(group_right_arm);
+	group_torso->add_group(group_left_leg);
+	group_torso->add_group(group_right_leg);
 
 	//this is the grass texture 
 	//some change
@@ -133,16 +155,15 @@ void MyViewer::build_scene ()
 		
 		ground.set_mode(GsModel::Flat, GsModel::NoMtl);
 		ground.textured = false;
-	/*
 	
 	
-	rootg()->add(g1);
-	rootg()->add(g2);
-	rootg()->add(g3);
-	rootg()->add(g4);
-	rootg()->add(g5);
-	rootg()->add(g6);
-	*/
+	//rootg()->add(group_head);
+	rootg()->add(group_torso);
+	//rootg()->add(group_left_arm);
+	//rootg()->add(group_right_arm);
+	//rootg()->add(group_left_leg);
+	//rootg()->add(group_right_leg);
+	
 	//gsout << "Normals: " << Bender->N.size() << gsnl;
 	//gsout << "Vertices: " << Bender->V.size() << gsnl;
 
