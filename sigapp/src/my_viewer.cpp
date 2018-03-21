@@ -11,6 +11,7 @@
 
 //Why is this no working?
 //Is this working now?
+//another comment
 
 MyViewer::MyViewer ( int x, int y, int w, int h, const char* l ) : WsViewer(x,y,w,h,l)
 {
