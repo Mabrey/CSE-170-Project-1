@@ -61,6 +61,9 @@ void MyViewer::build_scene ()
 	//Bender->textured = true;
 	rootg()->add(g1);
 
+	gsout << "Normals: " << Bender->N.size() << gsnl;
+	gsout << "Vertices: " << Bender->V.size() << gsnl;
+
 }
 
 // Below is an example of how to control the main loop of an animation:
