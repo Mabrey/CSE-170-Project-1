@@ -9,10 +9,6 @@
 
 # include <sigogl/ws_run.h>
 
-//Why is this no working?
-//Is this working now?
-//another comment
-
 MyViewer::MyViewer ( int x, int y, int w, int h, const char* l ) : WsViewer(x,y,w,h,l)
 {
 	_nbut=0;
@@ -53,22 +49,27 @@ void MyViewer::add_model ( SnShape* s, GsVec p )
 
 void MyViewer::build_scene ()
 {
-	
-//testing 1 2 3
-/*
-	GsModel* Bender = new GsModel;
+	SnPrimitive* p;
 
-	Bender->load_obj("../../objects/Bender.obj");
+	p = new SnPrimitive(GsPrimitive::Box,1,3,1);
+	p->prim().material.diffuse=GsColor::yellow;
+	add_model ( p, GsVec(0,0,0) );
 
-	SnGroup *g1 = new SnGroup;
-	g1->separator(true);
-	g1->add(new SnModel(Bender));
-	g1->top<SnModel>()->color(GsColor::blue);
-	Bender->set_mode(GsModel::Smooth, GsModel::PerGroupMtl);
-	Bender->textured = true;
+	p = new SnPrimitive(GsPrimitive::Sphere,2);
+	p->prim().material.diffuse=GsColor::red;
+	add_model ( p, GsVec(-4,0,0) );
 
-	rootg()->add(g1);
-	*/
+	p = new SnPrimitive(GsPrimitive::Cylinder,1.0,1.0,1.5);
+	p->prim().material.diffuse=GsColor::blue;
+	add_model ( p, GsVec(4,0,0) );
+
+	p = new SnPrimitive(GsPrimitive::Capsule,1,1,3);
+	p->prim().material.diffuse=GsColor::red;
+	add_model ( p, GsVec(8,0,0) );
+
+	p = new SnPrimitive(GsPrimitive::Ellipsoid,2.0,0.5);
+	p->prim().material.diffuse=GsColor::green;
+	add_model ( p, GsVec(-8,0,0) );
 }
 
 // Below is an example of how to control the main loop of an animation:
@@ -97,7 +98,6 @@ void MyViewer::run_animation ()
 	}	while ( m.e24>0 );
 	_animating = false;
 }
-
 
 void MyViewer::show_normals ( bool b )
 {
@@ -129,34 +129,12 @@ void MyViewer::show_normals ( bool b )
 
 int MyViewer::handle_keyboard ( const GsEvent &e )
 {
-	GsModel* m = new GsModel;
-	SnGroup *g1 = new SnGroup;
-	
 	int ret = WsViewer::handle_keyboard ( e ); // 1st let system check events
 	if ( ret ) return ret;
 
 	switch ( e.key )
 	{	case GsEvent::KeyEsc : gs_exit(); return 1;
 		case 'n' : { bool b=!_nbut->value(); _nbut->value(b); show_normals(b); return 1; }
-
-		case GsEvent::KeyCodes(113)://q
-			
-
-		case GsEvent::KeyCodes(97)://a
-			
-
-		case GsEvent::KeyCodes(119)://w
-			
-
-		case GsEvent::KeyCodes(115)://s
-			
-
-		case GsEvent::KeyCodes(101)://e
-			
-
-		case GsEvent::KeyCodes(100)://d
-			
-
 		default: gsout<<"Key pressed: "<<e.key<<gsnl;
 	}
 
@@ -165,8 +143,6 @@ int MyViewer::handle_keyboard ( const GsEvent &e )
 
 int MyViewer::uievent ( int e )
 {
-	
-
 	switch ( e )
 	{	case EvNormals: show_normals(_nbut->value()); return 1;
 		case EvAnimate: run_animation(); return 1;
