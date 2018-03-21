@@ -51,7 +51,7 @@ void MyViewer::build_scene ()
 {
 	
 	GsModel* Bender = new GsModel;
-	Bender->load_obj("../../objects/Bender.obj");
+	Bender->load_obj("../../objects/bender2.obj");
 
 	SnGroup *g1 = new SnGroup;
 	g1->separator(true);
