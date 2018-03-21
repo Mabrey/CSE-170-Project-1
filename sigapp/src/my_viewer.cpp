@@ -10,6 +10,7 @@
 # include <sigogl/ws_run.h>
 
 //Why is this no working?
+//Is this working now?
 
 MyViewer::MyViewer ( int x, int y, int w, int h, const char* l ) : WsViewer(x,y,w,h,l)
 {
