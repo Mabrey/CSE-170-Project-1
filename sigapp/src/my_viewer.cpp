@@ -135,6 +135,8 @@ void MyViewer::build_scene ()
 	group_torso->add_group(group_left_leg);
 	group_torso->add_group(group_right_leg);
 
+	
+
 	//this is the grass texture 
 	//some change
 	//Changing material seems to do some stuff. PerGroup crashes the program. Flat doesnt work well, but i could get smooth to kind of work.
@@ -167,6 +169,40 @@ void MyViewer::build_scene ()
 	//gsout << "Normals: " << Bender->N.size() << gsnl;
 	//gsout << "Vertices: " << Bender->V.size() << gsnl;
 
+}
+
+GsCamera* camera = new GsCamera;
+
+void switch_camera(int camera_num) {
+	
+	/*
+	double current, start = gs_time();
+	
+	switch (camera_num)
+	{
+	case 0:
+
+		break;
+	
+		
+
+	case 1:
+		
+		current = gs_time() - start;
+
+		do
+		{
+			current = gs_time() - start;
+			camera->eye.x += 0.001f;
+			camera->center.x += 0.001f;
+			camera->up.x += 0.001f;
+		
+			
+
+		} while (current<3.0f);
+
+	}
+	*/
 }
 
 // Below is an example of how to control the main loop of an animation:
@@ -229,9 +265,14 @@ int MyViewer::handle_keyboard ( const GsEvent &e )
 	int ret = WsViewer::handle_keyboard ( e ); // 1st let system check events
 	if ( ret ) return ret;
 
+	int camera_num = 0;
+
 	switch ( e.key )
 	{	case GsEvent::KeyEsc : gs_exit(); return 1;
 		case 'n' : { bool b=!_nbut->value(); _nbut->value(b); show_normals(b); return 1; }
+		case ' ': {camera_num = ++camera_num % 2; switch_camera(camera_num); return 1; }
+		
+		
 		default: gsout<<"Key pressed: "<<e.key<<gsnl;
 	}
 
