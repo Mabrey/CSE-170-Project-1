@@ -145,7 +145,7 @@ void MyViewer::build_scene ()
 		g.fi = 0;
 		g.fn = ground.F.size();
 		g.dmap = new GsModel::Texture;
-		g.dmap->fname.set("../../textures/checker.png");
+		g.dmap->fname.set("../../textures/grass.png");
 		ground.M.push().init();
 
 		
@@ -155,8 +155,8 @@ void MyViewer::build_scene ()
 		ground.T[2].set(0, 0);
 		ground.T[3].set(0, 1);
 		
-		ground.set_mode(GsModel::Flat, GsModel::NoMtl);
-		ground.textured = false;
+		ground.set_mode(GsModel::Flat, GsModel::PerGroupMtl);
+		ground.textured = true;
 	
 	
 	//rootg()->add(group_head);
