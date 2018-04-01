@@ -10,6 +10,8 @@
 
 # include <sigogl/ws_run.h>
 
+int camera_num = 0;
+
 MyViewer::MyViewer ( int x, int y, int w, int h, const char* l ) : WsViewer(x,y,w,h,l)
 {
 	_nbut=0;
@@ -50,7 +52,7 @@ void MyViewer::add_model ( SnShape* s, GsVec p )
 
 void MyViewer::build_scene ()
 {
-	
+
 	GsModel* bender_head = new GsModel;
 	GsModel* bender_torso = new GsModel;
 	GsModel* bender_left_arm = new GsModel;
@@ -65,14 +67,15 @@ void MyViewer::build_scene ()
 	ground.V.size(4);
 	ground.F.size(2);
 	ground.N.size(2);
-	ground.V[0] = GsVec(1, 0, 1);
-	ground.V[1] = GsVec(1, 0, -1);
-	ground.V[2] = GsVec(-1, 0, -1);
-	ground.V[3] = GsVec(-1, 0, 1);
+	ground.V[0] = GsVec(15, 0, 15);
+	ground.V[1] = GsVec(15, 0, -15);
+	ground.V[2] = GsVec(-15, 0, -15);
+	ground.V[3] = GsVec(-15, 0, 15);
 	ground.F[0] = GsModel::Face(0, 1, 2);
 	ground.F[1] = GsModel::Face(2, 3, 0);
 	ground.N[0] = GsVec(0, 1, 0);
 	ground.N[1] = GsVec(0, 1, 0);
+	ground.culling = false;
 	//ground.N[2] = GsVec(-1, 0, 1);
 	//ground.N[3] = GsVec(-1, 0, -1);
 	
@@ -134,29 +137,28 @@ void MyViewer::build_scene ()
 	group_torso->add_group(group_right_arm);
 	group_torso->add_group(group_left_leg);
 	group_torso->add_group(group_right_leg);
-
 	
 
 	//this is the grass texture 
 	//some change
 	//Changing material seems to do some stuff. PerGroup crashes the program. Flat doesnt work well, but i could get smooth to kind of work.
 	
-		GsModel::Group& g = *ground.G.push();
-		g.fi = 0;
-		g.fn = ground.F.size();
-		g.dmap = new GsModel::Texture;
-		g.dmap->fname.set("../../textures/grass.png");
-		ground.M.push().init();
+	GsModel::Group& g = *ground.G.push();
+	g.fi = 0;
+	g.fn = ground.F.size();
+	g.dmap = new GsModel::Texture;
+	g.dmap->fname.set("../../textures/grass.png");
+	ground.M.push().init();
 
 		
-		ground.T.size(4);
-		ground.T[0].set(1, 1);
-		ground.T[1].set(1, 0);
-		ground.T[2].set(0, 0);
-		ground.T[3].set(0, 1);
+	ground.T.size(4);
+	ground.T[0].set(1, 1);
+	ground.T[1].set(1, 0);
+	ground.T[2].set(0, 0);
+	ground.T[3].set(0, 1);
 		
-		ground.set_mode(GsModel::Flat, GsModel::PerGroupMtl);
-		ground.textured = true;
+	ground.set_mode(GsModel::Flat, GsModel::PerGroupMtl);
+	ground.textured = true;
 	
 	
 	//rootg()->add(group_head);
@@ -171,38 +173,85 @@ void MyViewer::build_scene ()
 
 }
 
-GsCamera* camera = new GsCamera;
+void MyViewer::switch_camera() {
+	
 
-void switch_camera(int camera_num) {
-	
-	/*
 	double current, start = gs_time();
-	
+	GsMat rotationx, rotationy;
+	rotationy.roty(GS_TORAD(90));
+	rotationx.rotz(GS_TORAD(45));
+	rotationx.mult(rotationx, rotationy);
+
+	camera_num %= 3;
+	gsout << camera_num;
 	switch (camera_num)
 	{
 	case 0:
 
+		//camera().init();
+		camera().rotate(rotationx);
+
+		render();
+		ws_check();
+
 		break;
 	
+	case 1:
+		rotationx.zero();
+		rotationy.zero();
+
+		rotationy.roty(GS_TORAD(-90));
+		rotationx.rotx(GS_TORAD(45));
+		rotationx.mult(rotationx, rotationy);
+
+		camera().rotate(rotationx);
+
+		render();
+		ws_check();
+
+		break;
 		
 
-	case 1:
+	case 2:
 		
 		current = gs_time() - start;
-
+		int count = 0;
 		do
 		{
-			current = gs_time() - start;
-			camera->eye.x += 0.001f;
-			camera->center.x += 0.001f;
-			camera->up.x += 0.001f;
-		
-			
 
-		} while (current<3.0f);
+			current = gs_time() - start;
+
+			if (current < 3.0f) {
+				
+				camera().eye.y += .1f;
+				
+			}
+
+			else if (current < 6.0f) {
+
+				camera().eye.x += .2f;
+				camera().eye.z -= .15f;
+			}
+			else if (current < 9.0f) {
+
+				camera().eye.x -= .2f;
+				camera().eye.z += .15f;
+			}
+			else {
+
+				camera().eye.y -= .1f;
+			}
+
+			render();
+			ws_check();
+
+		} while (current<12.0f);
+
+		break;
 
 	}
-	*/
+	
+	camera_num++;
 }
 
 // Below is an example of how to control the main loop of an animation:
@@ -265,12 +314,12 @@ int MyViewer::handle_keyboard ( const GsEvent &e )
 	int ret = WsViewer::handle_keyboard ( e ); // 1st let system check events
 	if ( ret ) return ret;
 
-	int camera_num = 0;
+	
 
 	switch ( e.key )
 	{	case GsEvent::KeyEsc : gs_exit(); return 1;
 		case 'n' : { bool b=!_nbut->value(); _nbut->value(b); show_normals(b); return 1; }
-		case ' ': {camera_num = ++camera_num % 2; switch_camera(camera_num); return 1; }
+		case GsEvent::KeySpace: {switch_camera(); return 1; }
 		
 		
 		default: gsout<<"Key pressed: "<<e.key<<gsnl;

@@ -18,6 +18,7 @@ class MyViewer : public WsViewer
 	void add_model ( SnShape* s, GsVec p );
 	void build_scene ();
 	void show_normals ( bool b );
+	void switch_camera();
 	void run_animation ();
 	virtual int handle_keyboard ( const GsEvent &e ) override;
 	virtual int uievent ( int e ) override;
