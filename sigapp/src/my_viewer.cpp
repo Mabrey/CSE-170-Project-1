@@ -260,6 +260,15 @@ void MyViewer::run_animation ()
 	if ( _animating ) return; // avoid recursive calls
 	_animating = true;
 	
+	double frdt = 1 / 30;
+	double startTime = gs_time(), elapsed, t = 0, lt = 0;
+
+	do {
+		while (t - lt<frdt) { ws_check(); t = gs_time() - startTime; }
+
+
+	} while (elapsed < 10);
+	/*
 	int ind = gs_random ( 0, rootg()->size()-1 ); // pick one child
 	SnManipulator* manip = rootg()->get<SnManipulator>(ind); // access one of the manipulators
 	GsMat m = manip->mat();
@@ -277,7 +286,7 @@ void MyViewer::run_animation ()
 		manip->initial_mat ( m );
 		render(); // notify it needs redraw
 		ws_check(); // redraw now
-	}	while ( m.e24>0 );
+	}	while ( m.e24>0 );*/
 	_animating = false;
 }
 
