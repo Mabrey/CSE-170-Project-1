@@ -22,6 +22,7 @@ class MyViewer : public WsViewer
 	void move_right_leg();
 	void move_left_arm();
 	void move_right_arm();
+	void move_head();
 	void switch_camera();
 	void run_animation ();
 	virtual int handle_keyboard ( const GsEvent &e ) override;

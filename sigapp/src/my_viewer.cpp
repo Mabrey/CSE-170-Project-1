@@ -10,7 +10,7 @@
 
 # include <sigogl/ws_run.h>
 
-int camera_num = 0, llRotNum = 0, rlRotNum = 0, laRotNum = 0, raRotNum = 0;
+int camera_num = 0, llRotNum = 0, rlRotNum = 0, laRotNum = 0, raRotNum = 0, headRotNum = 0;
 SnTransform* transf_head, *transf_torso, *transf_left_arm, *transf_right_arm, *transf_left_leg, *transf_right_leg;
 
 MyViewer::MyViewer ( int x, int y, int w, int h, const char* l ) : WsViewer(x,y,w,h,l)
@@ -113,6 +113,7 @@ void MyViewer::build_scene ()
 	group_left_arm->add(new SnModel(bender_left_arm));
 	group_left_arm->top<SnModel>()->color(GsColor::gray);
 	transf_left_arm->get().translation(4.5f, 0.8f, 0);
+	
 
 	group_right_arm->separator(true);
 	group_right_arm->add(transf_right_arm = new SnTransform);
@@ -176,49 +177,98 @@ void MyViewer::build_scene ()
 void MyViewer::move_left_leg() {
 	
 	GsMat rot;
+	GsMat translate;
+	GsMat transform = GsMat();
+	//GsMat headMat = transf_head->get();
+
+	translate.translation(0.0f, -3.3f, 0);
 	rot.rotx(GS_TORAD(llRotNum));
+	transform.mult(transform, translate);
+	transform.mult(transform, rot);
+	translate.translation(1.2f, -5.0f, 0);
+	transform.mult(transform, translate);
 
-	GsMat llegMat = transf_left_leg->get();
 
-	llegMat.mult(llegMat, rot);
-
-	transf_left_leg->set(llegMat);
+	transf_left_leg->set(transform);
 }
 
 void MyViewer::move_right_leg() {
 
 	GsMat rot;
+	GsMat translate;
+	GsMat transform = GsMat();
+	//GsMat headMat = transf_head->get();
+
+	translate.translation(0.0f, -3.4f, 0);
 	rot.rotx(GS_TORAD(rlRotNum));
+	transform.mult(transform, translate);
+	transform.mult(transform, rot);
+	translate.translation(-1.2f, -5.0f, 0);
+	transform.mult(transform, translate);
 
-	GsMat rlegMat = transf_right_leg->get();
+	
 
-	rlegMat.mult(rlegMat, rot);
-
-	transf_right_leg->set(rlegMat);
+	transf_right_leg->set(transform);
 }
 
 void MyViewer::move_left_arm() {
 
+
 	GsMat rot;
-	rot.rotz(GS_TORAD(laRotNum));
-
-	GsMat larmMat = transf_left_arm->get();
-
-	larmMat.mult(larmMat, rot);
-
-	transf_left_arm->set(larmMat);
+	GsMat translate;
+	GsMat transform = GsMat();
+	translate.translation(2.0f, 1.0f, 0);
+	
+	transform.mult(transform, translate);
+	rot.rotx(GS_TORAD(laRotNum));
+	//rot.rotz(GS_TORAD(-60));
+	transform.mult(transform, rot);
+	//rot.roty(GS_TORAD(laRotNum));
+	rot.rotz(GS_TORAD(-75));
+	transform.mult(transform, rot);
+	translate.translation(2.7f, 0.0f, 0);
+	
+	transform.mult(transform, translate);
+	transf_left_arm->set(transform);
 }
 
 void MyViewer::move_right_arm() {
 
 	GsMat rot;
-	rot.rotz(GS_TORAD(raRotNum));
+	GsMat translate;
+	GsMat transform = GsMat();
+	translate.translation(-2.0f, 1.0f, 0);
 
-	GsMat rarmMat = transf_right_arm->get();
+	transform.mult(transform, translate);
+	rot.rotx(GS_TORAD(raRotNum));
+	//rot.rotz(GS_TORAD(-60));
+	transform.mult(transform, rot);
+	//rot.roty(GS_TORAD(laRotNum));
+	rot.rotz(GS_TORAD(75));
+	transform.mult(transform, rot);
+	translate.translation(-2.7f, 0.0f, 0);
 
-	rarmMat.mult(rarmMat, rot);
+	transform.mult(transform, translate);
+	transf_right_arm->set(transform);
+}
 
-	transf_right_arm->set(rarmMat);
+void MyViewer::move_head() {
+
+	GsMat rot;
+	GsMat translate;
+	GsMat transform = GsMat();
+	//GsMat headMat = transf_head->get();
+
+	translate.translation(0.0f, 2.7f, 0);
+	rot.roty(GS_TORAD(headRotNum));
+	//llegMat.mult(llegMat, translate);
+	transform.mult(transform, rot);
+	transform.mult(transform, translate);
+
+	//translate.translation(1.2f, -5.0f, 0);
+	//llegMat.mult(llegMat, translate);
+
+	transf_head->set(transform);
 }
 
 void MyViewer::switch_camera() {
@@ -365,10 +415,16 @@ int MyViewer::handle_keyboard ( const GsEvent &e )
 	{	case GsEvent::KeyEsc : gs_exit(); return 1;
 		case 'n' : { bool b=!_nbut->value(); _nbut->value(b); show_normals(b); return 1; }
 		case GsEvent::KeySpace: {switch_camera(); return 1; }
-		case 'q': { llRotNum++;  move_left_leg(); render(); return 1; }
-		case 'a': { rlRotNum++;  move_right_leg(); render(); return 1; }
-		case 'w': { laRotNum++;  move_left_arm(); render(); return 1; }
-		case 's': { raRotNum++;  move_right_arm(); render(); return 1; }
+		case 'q': { llRotNum+=2;  move_left_leg(); render(); return 1; }
+		case 'a': { llRotNum-=2;  move_left_leg(); render(); return 1; }
+		case 'w': { rlRotNum+=2;  move_right_leg(); render(); return 1; }
+		case 's': { rlRotNum-=2;  move_right_leg(); render(); return 1; }
+		case 'e': { laRotNum+=4;  move_left_arm(); render(); return 1; }
+		case 'd': { laRotNum-=4;  move_left_arm(); render(); return 1; }
+		case 'r': { raRotNum+=4;  move_right_arm(); render(); return 1; }
+		case 'f': { raRotNum-=4;  move_right_arm(); render(); return 1; }
+		case 't': { headRotNum+=2;  move_head(); render(); return 1; }
+		case 'g': { headRotNum-=2;  move_head(); render(); return 1; }
 		
 		default: gsout<<"Key pressed: "<<e.key<<gsnl;
 	}
