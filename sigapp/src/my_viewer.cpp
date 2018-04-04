@@ -10,7 +10,8 @@
 
 # include <sigogl/ws_run.h>
 
-int camera_num = 0;
+int camera_num = 0, llRotNum = 0, rlRotNum = 0, laRotNum = 0, raRotNum = 0;
+SnTransform* transf_head, *transf_torso, *transf_left_arm, *transf_right_arm, *transf_left_leg, *transf_right_leg;
 
 MyViewer::MyViewer ( int x, int y, int w, int h, const char* l ) : WsViewer(x,y,w,h,l)
 {
@@ -90,7 +91,7 @@ void MyViewer::build_scene ()
 	SnGroup *group_right_arm = new SnGroup;
 	SnGroup *group_left_leg = new SnGroup;
 	SnGroup *group_right_leg = new SnGroup;
-	SnTransform* transf_head, *transf_torso, *transf_left_arm, *transf_right_arm, *transf_left_leg, *transf_right_leg;
+	
 	SnManipulator* main_manip = new SnManipulator;
 	//SnGroup *g7 = new SnGroup;
 
@@ -160,7 +161,6 @@ void MyViewer::build_scene ()
 	ground.set_mode(GsModel::Flat, GsModel::PerGroupMtl);
 	ground.textured = true;
 	
-	
 	//rootg()->add(group_head);
 	rootg()->add(group_torso);
 	//rootg()->add(group_left_arm);
@@ -171,6 +171,54 @@ void MyViewer::build_scene ()
 	//gsout << "Normals: " << Bender->N.size() << gsnl;
 	//gsout << "Vertices: " << Bender->V.size() << gsnl;
 
+}
+
+void MyViewer::move_left_leg() {
+	
+	GsMat rot;
+	rot.rotx(GS_TORAD(llRotNum));
+
+	GsMat llegMat = transf_left_leg->get();
+
+	llegMat.mult(llegMat, rot);
+
+	transf_left_leg->set(llegMat);
+}
+
+void MyViewer::move_right_leg() {
+
+	GsMat rot;
+	rot.rotx(GS_TORAD(rlRotNum));
+
+	GsMat rlegMat = transf_right_leg->get();
+
+	rlegMat.mult(rlegMat, rot);
+
+	transf_right_leg->set(rlegMat);
+}
+
+void MyViewer::move_left_arm() {
+
+	GsMat rot;
+	rot.rotz(GS_TORAD(laRotNum));
+
+	GsMat larmMat = transf_left_arm->get();
+
+	larmMat.mult(larmMat, rot);
+
+	transf_left_arm->set(larmMat);
+}
+
+void MyViewer::move_right_arm() {
+
+	GsMat rot;
+	rot.rotz(GS_TORAD(raRotNum));
+
+	GsMat rarmMat = transf_right_arm->get();
+
+	rarmMat.mult(rarmMat, rot);
+
+	transf_right_arm->set(rarmMat);
 }
 
 void MyViewer::switch_camera() {
@@ -256,18 +304,7 @@ void MyViewer::switch_camera() {
 
 // Below is an example of how to control the main loop of an animation:
 void MyViewer::run_animation ()
-{
-	if ( _animating ) return; // avoid recursive calls
-	_animating = true;
-	
-	double frdt = 1 / 30;
-	double startTime = gs_time(), elapsed, t = 0, lt = 0;
-
-	do {
-		while (t - lt<frdt) { ws_check(); t = gs_time() - startTime; }
-
-
-	} while (elapsed < 10);
+{	
 	/*
 	int ind = gs_random ( 0, rootg()->size()-1 ); // pick one child
 	SnManipulator* manip = rootg()->get<SnManipulator>(ind); // access one of the manipulators
@@ -287,7 +324,6 @@ void MyViewer::run_animation ()
 		render(); // notify it needs redraw
 		ws_check(); // redraw now
 	}	while ( m.e24>0 );*/
-	_animating = false;
 }
 
 void MyViewer::show_normals ( bool b )
@@ -329,7 +365,10 @@ int MyViewer::handle_keyboard ( const GsEvent &e )
 	{	case GsEvent::KeyEsc : gs_exit(); return 1;
 		case 'n' : { bool b=!_nbut->value(); _nbut->value(b); show_normals(b); return 1; }
 		case GsEvent::KeySpace: {switch_camera(); return 1; }
-		
+		case 'q': { llRotNum++;  move_left_leg(); render(); return 1; }
+		case 'a': { rlRotNum++;  move_right_leg(); render(); return 1; }
+		case 'w': { laRotNum++;  move_left_arm(); render(); return 1; }
+		case 's': { raRotNum++;  move_right_arm(); render(); return 1; }
 		
 		default: gsout<<"Key pressed: "<<e.key<<gsnl;
 	}
