@@ -90,6 +90,9 @@ void MyViewer::build_scene ()
 	SnGroup *group_bush8 = new SnGroup;
 	SnGroup *group_bush9 = new SnGroup;
 
+	SnTransform *transf_bush1, *transf_bush2, *transf_bush3, *transf_bush4,
+		*transf_bush5, *transf_bush6, *transf_bush7, *transf_bush8, *transf_bush9;
+
 	SnModel*sn = new SnModel;
 	GsModel& ground = *sn->model();
 	rootg()->add(sn);
@@ -97,7 +100,7 @@ void MyViewer::build_scene ()
 	init_bender_models(*bender_head, *bender_torso, *bender_left_arm,
 		*bender_right_arm, *bender_left_leg, *bender_right_leg);
 
-	init_bushes(bush1, bush2, bush3, bush4, bush5, bush6, bush7, bush8, bush9);
+	init_bushes(*bush1, *bush2, *bush3, *bush4, *bush5, *bush6, *bush7, *bush8, *bush9);
 
 	group_head->separator(true);
 	group_head->add(transf_head = new SnTransform);
@@ -145,6 +148,69 @@ void MyViewer::build_scene ()
 	group_torso->add_group(group_right_leg);
 	
 
+	group_bush1->separator(true);
+	group_bush1->add(transf_bush1 = new SnTransform);
+	group_bush1->add(new SnModel(bush1));
+	group_bush1->top<SnModel>()->color(GsColor::green);
+	transf_bush1->get().translation(3, 0, 3);
+	transf_bush1->get().lcombscale(6, 6, 6);
+
+	group_bush2->separator(true);
+	group_bush2->add(transf_bush2 = new SnTransform);
+	group_bush2->add(new SnModel(bush2));
+	group_bush2->top<SnModel>()->color(GsColor::green);
+	transf_bush2->get().translation(-12, 0, 4);
+	transf_bush2->get().lcombscale(6, 6, 6);
+
+	group_bush3->separator(true);
+	group_bush3->add(transf_bush3 = new SnTransform);
+	group_bush3->add(new SnModel(bush3));
+	group_bush3->top<SnModel>()->color(GsColor::green);
+	transf_bush3->get().translation(3, 0, 12);
+	transf_bush3->get().lcombscale(5, 7, 4);
+
+	group_bush4->separator(true);
+	group_bush4->add(transf_bush4 = new SnTransform);
+	group_bush4->add(new SnModel(bush4));
+	group_bush4->top<SnModel>()->color(GsColor::green);
+	transf_bush4->get().translation(-1, 0, -14);
+	transf_bush4->get().lcombscale(3, 6, 4);
+
+	group_bush5->separator(true);
+	group_bush5->add(transf_bush5 = new SnTransform);
+	group_bush5->add(new SnModel(bush5));
+	group_bush5->top<SnModel>()->color(GsColor::green);
+	transf_bush5->get().translation(-6, 0, -3);
+	transf_bush5->get().lcombscale(6, 6, 6);
+
+	group_bush6->separator(true);
+	group_bush6->add(transf_bush6 = new SnTransform);
+	group_bush6->add(new SnModel(bush6));
+	group_bush6->top<SnModel>()->color(GsColor::green);
+	transf_bush6->get().translation(8, 0, -9);
+	transf_bush6->get().lcombscale(4, 6, 5);
+
+	group_bush7->separator(true);
+	group_bush7->add(transf_bush7 = new SnTransform);
+	group_bush7->add(new SnModel(bush7));
+	group_bush7->top<SnModel>()->color(GsColor::green);
+	transf_bush7->get().translation(-13, 0, 9);
+	transf_bush7->get().lcombscale(9, 9, 9);
+
+	group_bush8->separator(true);
+	group_bush8->add(transf_bush8 = new SnTransform);
+	group_bush8->add(new SnModel(bush8));
+	group_bush8->top<SnModel>()->color(GsColor::green);
+	transf_bush8->get().translation(2, 0, 5);
+	transf_bush8->get().lcombscale(6, 3, 8);
+
+	group_bush9->separator(true);
+	group_bush9->add(transf_bush9 = new SnTransform);
+	group_bush9->add(new SnModel(bush9));
+	group_bush9->top<SnModel>()->color(GsColor::green);
+	transf_bush9->get().translation(10, 0, 7);
+	transf_bush9->get().lcombscale(4, 6, 5);
+
 	//this is the grass texture 
 	//some change
 	//Changing material seems to do some stuff. PerGroup crashes the program. Flat doesnt work well, but i could get smooth to kind of work.
@@ -179,15 +245,16 @@ void MyViewer::build_scene ()
 	ground.set_mode(GsModel::Flat, GsModel::PerGroupMtl);
 	ground.textured = true;
 	
-	//rootg()->add(group_head);
 	rootg()->add(group_torso);
-	//rootg()->add(group_left_arm);
-	//rootg()->add(group_right_arm);
-	//rootg()->add(group_left_leg);
-	//rootg()->add(group_right_leg);
-	
-	//gsout << "Normals: " << Bender->N.size() << gsnl;
-	//gsout << "Vertices: " << Bender->V.size() << gsnl;
+	rootg()->add(group_bush1);
+	rootg()->add(group_bush2);
+	rootg()->add(group_bush3);
+	rootg()->add(group_bush4);
+	rootg()->add(group_bush5);
+	rootg()->add(group_bush6);
+	rootg()->add(group_bush7);
+	rootg()->add(group_bush8);
+	rootg()->add(group_bush9);
 
 }
 
