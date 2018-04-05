@@ -1,6 +1,7 @@
 
 # include "my_viewer.h"
 # include "bender.h"
+#include "bushes.h"
 
 # include <sigogl/ui_button.h>
 # include <sigogl/ui_radio_button.h>
@@ -61,29 +62,15 @@ void MyViewer::build_scene ()
 	GsModel* bender_left_leg = new GsModel;
 	GsModel* bender_right_leg = new GsModel;
 
-	SnModel*sn = new SnModel;
-	GsModel& ground = *sn->model();
-	rootg()->add(sn);
-
-	ground.V.size(4);
-	ground.F.size(2);
-	ground.N.size(2);
-	ground.V[0] = GsVec(15, 0, 15);
-	ground.V[1] = GsVec(15, 0, -15);
-	ground.V[2] = GsVec(-15, 0, -15);
-	ground.V[3] = GsVec(-15, 0, 15);
-	ground.F[0] = GsModel::Face(0, 1, 2);
-	ground.F[1] = GsModel::Face(2, 3, 0);
-	ground.N[0] = GsVec(0, 1, 0);
-	ground.N[1] = GsVec(0, 1, 0);
-	ground.culling = false;
-	//ground.N[2] = GsVec(-1, 0, 1);
-	//ground.N[3] = GsVec(-1, 0, -1);
-	
-
-
-	init_bender_models(*bender_head, *bender_torso, *bender_left_arm,
-		*bender_right_arm, *bender_left_leg, *bender_right_leg);
+	GsModel* bush1 = new GsModel;
+	GsModel* bush2 = new GsModel;
+	GsModel* bush3 = new GsModel;
+	GsModel* bush4 = new GsModel;
+	GsModel* bush5 = new GsModel;
+	GsModel* bush6 = new GsModel;
+	GsModel* bush7 = new GsModel;
+	GsModel* bush8 = new GsModel;
+	GsModel* bush9 = new GsModel;
 
 	SnGroup *group_head = new SnGroup;
 	SnGroup *group_torso = new SnGroup;
@@ -91,9 +78,25 @@ void MyViewer::build_scene ()
 	SnGroup *group_right_arm = new SnGroup;
 	SnGroup *group_left_leg = new SnGroup;
 	SnGroup *group_right_leg = new SnGroup;
-	
-	SnManipulator* main_manip = new SnManipulator;
-	//SnGroup *g7 = new SnGroup;
+
+	SnGroup *group_bush1 = new SnGroup;
+	SnGroup *group_bush2 = new SnGroup;
+	SnGroup *group_bush3 = new SnGroup;
+	SnGroup *group_bush4 = new SnGroup;
+	SnGroup *group_bush5 = new SnGroup;
+	SnGroup *group_bush6 = new SnGroup;
+	SnGroup *group_bush7 = new SnGroup;
+	SnGroup *group_bush8 = new SnGroup;
+	SnGroup *group_bush9 = new SnGroup;
+
+	SnModel*sn = new SnModel;
+	GsModel& ground = *sn->model();
+	rootg()->add(sn);
+
+	init_bender_models(*bender_head, *bender_torso, *bender_left_arm,
+		*bender_right_arm, *bender_left_leg, *bender_right_leg);
+
+	init_bushes(bush1, bush2, bush3, bush4, bush5, bush6, bush7, bush8, bush9);
 
 	group_head->separator(true);
 	group_head->add(transf_head = new SnTransform);
@@ -145,6 +148,19 @@ void MyViewer::build_scene ()
 	//some change
 	//Changing material seems to do some stuff. PerGroup crashes the program. Flat doesnt work well, but i could get smooth to kind of work.
 	
+	ground.V.size(4);
+	ground.F.size(2);
+	ground.N.size(2);
+	ground.V[0] = GsVec(15, 0, 15);
+	ground.V[1] = GsVec(15, 0, -15);
+	ground.V[2] = GsVec(-15, 0, -15);
+	ground.V[3] = GsVec(-15, 0, 15);
+	ground.F[0] = GsModel::Face(0, 1, 2);
+	ground.F[1] = GsModel::Face(2, 3, 0);
+	ground.N[0] = GsVec(0, 1, 0);
+	ground.N[1] = GsVec(0, 1, 0);
+	ground.culling = false;
+
 	GsModel::Group& g = *ground.G.push();
 	g.fi = 0;
 	g.fn = ground.F.size();

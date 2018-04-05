@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\bender.h" />
+    <ClInclude Include="..\src\bushes.h" />
     <ClInclude Include="..\src\my_viewer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
