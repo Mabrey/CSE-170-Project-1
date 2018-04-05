@@ -1,4 +1,13 @@
+/*
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!DISCLAIMER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+
+IT TAKES LIKE 20 SECONDS TO LAUNCH DUE TO NUMBER OF VERTICES; 
+IT DOES WORK, JUST GIVE IT SOME TIME
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!DISCLAIMER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+*/
 # include "my_viewer.h"
 # include "bender.h"
 #include "bushes.h"
