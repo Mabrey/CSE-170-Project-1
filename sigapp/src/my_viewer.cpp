@@ -12,6 +12,7 @@
 
 int camera_num = 0, llRotNum = 0, rlRotNum = 0, laRotNum = 0, raRotNum = 0, headRotNum = 0, orientation = 0;
 SnTransform* transf_head, *transf_torso, *transf_left_arm, *transf_right_arm, *transf_left_leg, *transf_right_leg;
+bool legIncreasing, armIncreasing;
 bool cameraMoving = false;
 
 MyViewer::MyViewer ( int x, int y, int w, int h, const char* l ) : WsViewer(x,y,w,h,l)
@@ -280,6 +281,21 @@ void MyViewer::move_forward() {
 	translate.translation((float)sin(GS_TORAD(orientation)), 0.0f, (float)cos(GS_TORAD(orientation)));
 	transform.mult(currentMat, translate);
 	transf_torso->set(transform);
+
+	llRotNum = llRotNum + (legIncreasing ? 4 : -4);
+	rlRotNum = rlRotNum + (legIncreasing ? -4 : 4);
+	laRotNum = laRotNum + (armIncreasing ? -3 : 3);
+	raRotNum = raRotNum + (armIncreasing ? 3 : -3);
+	if (llRotNum >= 20 || llRotNum <= -20)
+		legIncreasing = !legIncreasing;
+	
+	if (laRotNum >= 15 || laRotNum <= -15)
+		armIncreasing = !armIncreasing;
+
+	move_left_leg();
+	move_right_leg();
+	move_left_arm();
+	move_right_arm();
 }
 
 void MyViewer::move_backward() {
@@ -290,6 +306,20 @@ void MyViewer::move_backward() {
 	translate.translation(-(float)sin(GS_TORAD(orientation)), 0.0f, -(float)cos(GS_TORAD(orientation)));
 	transform.mult(currentMat, translate);
 	transf_torso->set(transform);
+
+	llRotNum = llRotNum + (legIncreasing ? -4 : 4);
+	rlRotNum = rlRotNum + (legIncreasing ? 4 : -4);
+	laRotNum = laRotNum + (armIncreasing ? 3 : -3);
+	raRotNum = raRotNum + (armIncreasing ? -3 : 3);
+
+	if (llRotNum >= 20 || llRotNum <= -20) legIncreasing = !legIncreasing;
+	if (laRotNum >= 15 || laRotNum <= -15)armIncreasing = !armIncreasing;
+	
+	move_left_leg();
+	move_right_leg();
+	move_left_arm();
+	move_right_arm();
+
 }
 
 void MyViewer::rotate_torso_left() {
@@ -301,6 +331,43 @@ void MyViewer::rotate_torso_left() {
 	rot.roty(GS_TORAD(5));
 	transform.mult(currentMat, rot);
 	transf_torso->set(transform);
+
+
+	if (llRotNum >= -4 && llRotNum <= 4 && rlRotNum >= -4 && rlRotNum <= 4 && laRotNum >= -3 && laRotNum <= 3 && raRotNum >= -3 && raRotNum <= 3)
+	{
+		llRotNum = llRotNum + (legIncreasing ? -4 : 4);
+		rlRotNum = rlRotNum + (legIncreasing ? 4 : -4);
+		laRotNum = laRotNum + (armIncreasing ? 3 : -3);
+		raRotNum = raRotNum + (armIncreasing ? -3 : 3);
+
+		if (llRotNum >= 4 || llRotNum <= -4) legIncreasing = !legIncreasing;
+		if (laRotNum >= 3 || laRotNum <= -3) armIncreasing = !armIncreasing;
+	}
+	else if (llRotNum < -4 && rlRotNum > 4)
+	{
+		llRotNum += 8;
+		rlRotNum -= 8;
+	}
+	else if (llRotNum > 4 && rlRotNum < -4)
+	{
+		rlRotNum += 8;
+		llRotNum -= 8;
+	}
+	else if (laRotNum < -3 && raRotNum > 3)
+	{
+		laRotNum += 6;
+		raRotNum -= 6;
+	}
+	else if (laRotNum > 3 && raRotNum < -3)
+	{
+		raRotNum += 6;
+		laRotNum -= 6;
+	}
+	
+	move_left_leg();
+	move_right_leg();
+	move_left_arm();
+	move_right_arm();
 }
 
 void MyViewer::rotate_torso_right() {
@@ -312,6 +379,42 @@ void MyViewer::rotate_torso_right() {
 	rot.roty(GS_TORAD(-5));
 	transform.mult(currentMat, rot);
 	transf_torso->set(transform);
+
+	if (llRotNum >= -4 && llRotNum <= 4 && rlRotNum >= -4 && rlRotNum <= 4 && laRotNum >= -3 && laRotNum <= 3 && raRotNum >= -3 && raRotNum <= 3)
+	{
+		llRotNum = llRotNum + (legIncreasing ? 4 : -4);
+		rlRotNum = rlRotNum + (legIncreasing ? -4 : 4);
+		laRotNum = laRotNum + (armIncreasing ? -3 : 3);
+		raRotNum = raRotNum + (armIncreasing ? 3 : -3);
+
+		if (llRotNum >= 4 || llRotNum <= -4) legIncreasing = !legIncreasing;
+		if (laRotNum >= 3 || laRotNum <= -3) armIncreasing = !armIncreasing;
+	}
+	else if (llRotNum < -4 && rlRotNum > 4)
+	{
+		llRotNum += 8;
+		rlRotNum -= 8;
+	}
+	else if (llRotNum > 4 && rlRotNum < -4)
+	{
+		rlRotNum += 8;
+		llRotNum -= 8;
+	}
+	else if (laRotNum < -3 && raRotNum > 3)
+	{
+		laRotNum += 6;
+		raRotNum -= 6;
+	}
+	else if (laRotNum > 3 && raRotNum < -3)
+	{
+		raRotNum += 6;
+		laRotNum -= 6;
+	}
+
+	move_left_leg();
+	move_right_leg();
+	move_left_arm();
+	move_right_arm();
 }
 
 void MyViewer::switch_camera() {
