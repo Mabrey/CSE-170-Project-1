@@ -11,8 +11,9 @@
 
 # include <sigogl/ws_run.h>
 
-int camera_num = 0, llRotNum = 0, rlRotNum = 0, laRotNum = 0, raRotNum = 0, headRotNum = 0;
+int camera_num = 0, llRotNum = 0, rlRotNum = 0, laRotNum = 0, raRotNum = 0, headRotNum = 0, orientation = 0;
 SnTransform* transf_head, *transf_torso, *transf_left_arm, *transf_right_arm, *transf_left_leg, *transf_right_leg;
+bool cameraMoving = false;
 
 MyViewer::MyViewer ( int x, int y, int w, int h, const char* l ) : WsViewer(x,y,w,h,l)
 {
@@ -287,6 +288,48 @@ void MyViewer::move_head() {
 	transf_head->set(transform);
 }
 
+void MyViewer::move_forward() {
+	GsMat rot;
+	GsMat translate;
+	GsMat transform = GsMat();
+	GsMat currentMat = transf_torso->get();
+	translate.translation((float)sin(GS_TORAD(orientation)), 0.0f, (float)cos(GS_TORAD(orientation)));
+	transform.mult(currentMat, translate);
+	transf_torso->set(transform);
+}
+
+void MyViewer::move_backward() {
+	GsMat rot;
+	GsMat translate;
+	GsMat transform = GsMat();
+	GsMat currentMat = transf_torso->get();
+	translate.translation(-(float)sin(GS_TORAD(orientation)), 0.0f, -(float)cos(GS_TORAD(orientation)));
+	transform.mult(currentMat, translate);
+	transf_torso->set(transform);
+}
+
+void MyViewer::rotate_torso_left() {
+	//orientation += 5;
+	GsMat rot;
+	GsMat translate;
+	GsMat transform = GsMat();
+	GsMat currentMat = transf_torso->get();
+	rot.roty(GS_TORAD(5));
+	transform.mult(currentMat, rot);
+	transf_torso->set(transform);
+}
+
+void MyViewer::rotate_torso_right() {
+	//orientation -= 5;
+	GsMat rot;
+	GsMat translate;
+	GsMat transform = GsMat();
+	GsMat currentMat = transf_torso->get();
+	rot.roty(GS_TORAD(-5));
+	transform.mult(currentMat, rot);
+	transf_torso->set(transform);
+}
+
 void MyViewer::switch_camera() {
 	
 
@@ -327,7 +370,8 @@ void MyViewer::switch_camera() {
 		
 
 	case 2:
-		
+		cameraMoving = true;
+
 		current = gs_time() - start;
 		int count = 0;
 		do
@@ -360,7 +404,7 @@ void MyViewer::switch_camera() {
 			ws_check();
 
 		} while (current<12.0f);
-
+		cameraMoving = false;
 		break;
 
 	}
@@ -430,7 +474,11 @@ int MyViewer::handle_keyboard ( const GsEvent &e )
 	switch ( e.key )
 	{	case GsEvent::KeyEsc : gs_exit(); return 1;
 		case 'n' : { bool b=!_nbut->value(); _nbut->value(b); show_normals(b); return 1; }
-		case GsEvent::KeySpace: {switch_camera(); return 1; }
+		case GsEvent::KeySpace: {
+			if (!cameraMoving)
+				switch_camera();
+			return 1;
+		}
 		case 'q': { llRotNum+=2;  move_left_leg(); render(); return 1; }
 		case 'a': { llRotNum-=2;  move_left_leg(); render(); return 1; }
 		case 'w': { rlRotNum+=2;  move_right_leg(); render(); return 1; }
@@ -441,7 +489,11 @@ int MyViewer::handle_keyboard ( const GsEvent &e )
 		case 'f': { raRotNum-=4;  move_right_arm(); render(); return 1; }
 		case 't': { headRotNum+=2;  move_head(); render(); return 1; }
 		case 'g': { headRotNum-=2;  move_head(); render(); return 1; }
-		
+		case GsEvent::KeyUp: {move_forward(); render(); return 1; }
+		case GsEvent::KeyDown: {move_backward(); render(); return 1; }
+		case GsEvent::KeyLeft: {rotate_torso_left(); render(); return 1; }
+		case GsEvent::KeyRight: {rotate_torso_right(); render(); return 1; }
+
 		default: gsout<<"Key pressed: "<<e.key<<gsnl;
 	}
 
