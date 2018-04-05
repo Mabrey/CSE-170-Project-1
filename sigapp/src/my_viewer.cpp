@@ -153,56 +153,56 @@ void MyViewer::build_scene ()
 	group_bush1->add(transf_bush1 = new SnTransform);
 	group_bush1->add(new SnModel(bush1));
 	group_bush1->top<SnModel>()->color(GsColor::green);
-	transf_bush1->get().translation(3, 0, 3);
+	transf_bush1->get().translation(8, 0, 8);
 	transf_bush1->get().lcombscale(6, 6, 6);
 
 	group_bush2->separator(true);
 	group_bush2->add(transf_bush2 = new SnTransform);
 	group_bush2->add(new SnModel(bush2));
 	group_bush2->top<SnModel>()->color(GsColor::green);
-	transf_bush2->get().translation(-12, 0, 4);
+	transf_bush2->get().translation(-12, 0, 8);
 	transf_bush2->get().lcombscale(6, 6, 6);
 
 	group_bush3->separator(true);
 	group_bush3->add(transf_bush3 = new SnTransform);
 	group_bush3->add(new SnModel(bush3));
 	group_bush3->top<SnModel>()->color(GsColor::green);
-	transf_bush3->get().translation(3, 0, 12);
+	transf_bush3->get().translation(9, 0, 20);
 	transf_bush3->get().lcombscale(5, 7, 4);
 
 	group_bush4->separator(true);
 	group_bush4->add(transf_bush4 = new SnTransform);
 	group_bush4->add(new SnModel(bush4));
 	group_bush4->top<SnModel>()->color(GsColor::green);
-	transf_bush4->get().translation(-1, 0, -14);
+	transf_bush4->get().translation(-5, 0, -20);
 	transf_bush4->get().lcombscale(3, 6, 4);
 
 	group_bush5->separator(true);
 	group_bush5->add(transf_bush5 = new SnTransform);
 	group_bush5->add(new SnModel(bush5));
 	group_bush5->top<SnModel>()->color(GsColor::green);
-	transf_bush5->get().translation(-6, 0, -3);
+	transf_bush5->get().translation(-8, 0, -10);
 	transf_bush5->get().lcombscale(6, 6, 6);
 
 	group_bush6->separator(true);
 	group_bush6->add(transf_bush6 = new SnTransform);
 	group_bush6->add(new SnModel(bush6));
 	group_bush6->top<SnModel>()->color(GsColor::green);
-	transf_bush6->get().translation(8, 0, -9);
+	transf_bush6->get().translation(15, 0, -9);
 	transf_bush6->get().lcombscale(4, 6, 5);
 
 	group_bush7->separator(true);
 	group_bush7->add(transf_bush7 = new SnTransform);
 	group_bush7->add(new SnModel(bush7));
 	group_bush7->top<SnModel>()->color(GsColor::green);
-	transf_bush7->get().translation(-13, 0, 9);
+	transf_bush7->get().translation(-18, 0, 14);
 	transf_bush7->get().lcombscale(9, 9, 9);
 
 	group_bush8->separator(true);
 	group_bush8->add(transf_bush8 = new SnTransform);
 	group_bush8->add(new SnModel(bush8));
 	group_bush8->top<SnModel>()->color(GsColor::green);
-	transf_bush8->get().translation(2, 0, 5);
+	transf_bush8->get().translation(18, 0, 6);
 	transf_bush8->get().lcombscale(6, 3, 8);
 
 	group_bush9->separator(true);
@@ -219,10 +219,10 @@ void MyViewer::build_scene ()
 	ground.V.size(4);
 	ground.F.size(2);
 	ground.N.size(2);
-	ground.V[0] = GsVec(15, 0, 15);
-	ground.V[1] = GsVec(15, 0, -15);
-	ground.V[2] = GsVec(-15, 0, -15);
-	ground.V[3] = GsVec(-15, 0, 15);
+	ground.V[0] = GsVec(30, 0, 30);
+	ground.V[1] = GsVec(30, 0, -30);
+	ground.V[2] = GsVec(-30, 0, -30);
+	ground.V[3] = GsVec(-30, 0, 30);
 	ground.F[0] = GsModel::Face(0, 1, 2);
 	ground.F[1] = GsModel::Face(2, 3, 0);
 	ground.N[0] = GsVec(0, 1, 0);
