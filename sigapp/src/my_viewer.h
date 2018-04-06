@@ -27,6 +27,7 @@ class MyViewer : public WsViewer
 	void move_backward();
 	void rotate_torso_left();
 	void rotate_torso_right();
+	void move_shadow();
 	void switch_camera();
 	void run_animation ();
 	virtual int handle_keyboard ( const GsEvent &e ) override;

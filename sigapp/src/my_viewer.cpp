@@ -20,8 +20,9 @@ IT DOES WORK, JUST GIVE IT SOME TIME
 
 # include <sigogl/ws_run.h>
 
-int camera_num = 0, llRotNum = 0, rlRotNum = 0, laRotNum = 0, raRotNum = 0, headRotNum = 0, orientation = 0;
-SnTransform* transf_head, *transf_torso, *transf_left_arm, *transf_right_arm, *transf_left_leg, *transf_right_leg;
+int camera_num = 0, llRotNum = 0, rlRotNum = 0, laRotNum = 0, raRotNum = 0, headRotNum = 0, orientation = 0, shadowOrientation = 0;
+SnTransform* transf_head, *transf_torso, *transf_left_arm, *transf_right_arm, *transf_left_leg, *transf_right_leg, *transf_shadow,
+*transf_shadow_head, *transf_shadow_torso, *transf_shadow_left_arm, *transf_shadow_right_arm, *transf_shadow_left_leg, *transf_shadow_right_leg;
 bool legIncreasing, armIncreasing;
 bool cameraMoving = false;
 
@@ -63,7 +64,7 @@ void MyViewer::add_model ( SnShape* s, GsVec p )
 	rootg()->add(manip);
 }
 
-void MyViewer::build_scene ()
+void MyViewer::build_scene()
 {
 
 	GsModel* bender_head = new GsModel;
@@ -75,13 +76,6 @@ void MyViewer::build_scene ()
 
 	GsModel* bush1 = new GsModel;
 	GsModel* bush2 = new GsModel;
-	GsModel* bush3 = new GsModel;
-	GsModel* bush4 = new GsModel;
-	GsModel* bush5 = new GsModel;
-	GsModel* bush6 = new GsModel;
-	GsModel* bush7 = new GsModel;
-	GsModel* bush8 = new GsModel;
-	GsModel* bush9 = new GsModel;
 
 	SnGroup *group_head = new SnGroup;
 	SnGroup *group_torso = new SnGroup;
@@ -90,18 +84,18 @@ void MyViewer::build_scene ()
 	SnGroup *group_left_leg = new SnGroup;
 	SnGroup *group_right_leg = new SnGroup;
 
+	SnGroup *group_shadow = new SnGroup;
+	SnGroup *group_shadow_head = new SnGroup;
+	SnGroup *group_shadow_torso = new SnGroup;
+	SnGroup *group_shadow_left_arm = new SnGroup;
+	SnGroup *group_shadow_right_arm = new SnGroup;
+	SnGroup *group_shadow_left_leg = new SnGroup;
+	SnGroup *group_shadow_right_leg = new SnGroup;
+
 	SnGroup *group_bush1 = new SnGroup;
 	SnGroup *group_bush2 = new SnGroup;
-	SnGroup *group_bush3 = new SnGroup;
-	SnGroup *group_bush4 = new SnGroup;
-	SnGroup *group_bush5 = new SnGroup;
-	SnGroup *group_bush6 = new SnGroup;
-	SnGroup *group_bush7 = new SnGroup;
-	SnGroup *group_bush8 = new SnGroup;
-	SnGroup *group_bush9 = new SnGroup;
 
-	SnTransform *transf_bush1, *transf_bush2, *transf_bush3, *transf_bush4,
-		*transf_bush5, *transf_bush6, *transf_bush7, *transf_bush8, *transf_bush9;
+	SnTransform *transf_bush1, *transf_bush2;
 
 	SnModel*sn = new SnModel;
 	GsModel& ground = *sn->model();
@@ -110,8 +104,10 @@ void MyViewer::build_scene ()
 	init_bender_models(*bender_head, *bender_torso, *bender_left_arm,
 		*bender_right_arm, *bender_left_leg, *bender_right_leg);
 
-	init_bushes(*bush1, *bush2, *bush3, *bush4, *bush5, *bush6, *bush7, *bush8, *bush9);
+	init_bushes(*bush1, *bush2);
 
+	//this is the bender model
+	{
 	group_head->separator(true);
 	group_head->add(transf_head = new SnTransform);
 	group_head->add(new SnModel(bender_head));
@@ -130,7 +126,7 @@ void MyViewer::build_scene ()
 	group_left_arm->add(new SnModel(bender_left_arm));
 	group_left_arm->top<SnModel>()->color(GsColor::gray);
 	transf_left_arm->get().translation(4.5f, 0.8f, 0);
-	
+
 
 	group_right_arm->separator(true);
 	group_right_arm->add(transf_right_arm = new SnTransform);
@@ -150,93 +146,105 @@ void MyViewer::build_scene ()
 	group_right_leg->top<SnModel>()->color(GsColor::gray);
 	transf_right_leg->get().translation(-1.2f, -8.4f, 0);
 
+	group_shadow_head->separator(true);
+	group_shadow_head->add(transf_head = new SnTransform);
+	group_shadow_head->add(new SnModel(bender_head));
+	group_shadow_head->top<SnModel>()->color(GsColor::black);
+	transf_head->get().translation(0, 2.7f, 0);
+
+	group_shadow_torso->separator(true);
+	group_shadow_torso->add(transf_shadow = new SnTransform);
+	group_shadow_torso->add(new SnModel(bender_torso));
+	group_shadow_torso->top<SnModel>()->color(GsColor::black);
+	transf_shadow->get().translation(0, 8.25f, 0);
+
+
+	group_shadow_left_arm->separator(true);
+	group_shadow_left_arm->add(transf_shadow_left_arm = new SnTransform);
+	group_shadow_left_arm->add(new SnModel(bender_left_arm));
+	group_shadow_left_arm->top<SnModel>()->color(GsColor::black);
+	transf_shadow_left_arm->get().translation(4.5f, 0.8f, 0);
+
+
+	group_shadow_right_arm->separator(true);
+	group_shadow_right_arm->add(transf_shadow_right_arm = new SnTransform);
+	group_shadow_right_arm->add(new SnModel(bender_right_arm));
+	group_shadow_right_arm->top<SnModel>()->color(GsColor::black);
+	transf_shadow_right_arm->get().translation(-4.4f, 0.92f, 0);
+
+	group_shadow_left_leg->separator(true);
+	group_shadow_left_leg->add(transf_shadow_left_leg = new SnTransform);
+	group_shadow_left_leg->add(new SnModel(bender_left_leg));
+	group_shadow_left_leg->top<SnModel>()->color(GsColor::black);
+	transf_shadow_left_leg->get().translation(1.2f, -8.32f, 0);
+
+	group_shadow_right_leg->separator(true);
+	group_shadow_right_leg->add(transf_shadow_right_leg = new SnTransform);
+	group_shadow_right_leg->add(new SnModel(bender_right_leg));
+	group_shadow_right_leg->top<SnModel>()->color(GsColor::black);
+	transf_shadow_right_leg->get().translation(-1.2f, -8.4f, 0);
+
+}
+
 	//assembles each group onto the torso group to make the full model
 	group_torso->add_group(group_head);
 	group_torso->add_group(group_left_arm);
 	group_torso->add_group(group_right_arm);
 	group_torso->add_group(group_left_leg);
 	group_torso->add_group(group_right_leg);
+
+	
+	group_shadow_torso->add_group(group_shadow_head);
+	group_shadow_torso->add_group(group_shadow_left_arm);
+	group_shadow_torso->add_group(group_shadow_right_arm);
+	group_shadow_torso->add_group(group_shadow_left_leg);
+	group_shadow_torso->add_group(group_shadow_right_leg);
+	transf_shadow->get().translation(0.0f, 0.1f, -8);
+	transf_shadow->get().lcombscale(1, .01f, 1);
+	group_shadow_torso->top<SnModel>()->color(GsColor::black);
+
+	GsMat rot;
+	GsMat translate;
+	GsMat transform = GsMat();
+	GsMat currentMat = transf_shadow->get();
+	//translate.translation((float)sin(GS_TORAD(orientation)), 0.0f, (float)cos(GS_TORAD(orientation)));
+	rot.rotx(GS_TORAD(-90));
+	transform.mult(currentMat, rot);
+	transf_shadow->set(transform);
 	
 
-	group_bush1->separator(true);
-	group_bush1->add(transf_bush1 = new SnTransform);
-	group_bush1->add(new SnModel(bush1));
-	group_bush1->top<SnModel>()->color(GsColor::green);
-	transf_bush1->get().translation(8, 0, 8);
-	transf_bush1->get().lcombscale(6, 6, 6);
+	//This is the bush models 
+	{
+		group_bush1->separator(true);
+		group_bush1->add(transf_bush1 = new SnTransform);
+		group_bush1->add(new SnModel(bush1));
+		group_bush1->top<SnModel>()->color(GsColor::green);
+		transf_bush1->get().translation(8, 0, 8);
+		transf_bush1->get().lcombscale(6, 6, 6);
 
-	group_bush2->separator(true);
-	group_bush2->add(transf_bush2 = new SnTransform);
-	group_bush2->add(new SnModel(bush2));
-	group_bush2->top<SnModel>()->color(GsColor::green);
-	transf_bush2->get().translation(-12, 0, 8);
-	transf_bush2->get().lcombscale(6, 6, 6);
+		group_bush2->separator(true);
+		group_bush2->add(transf_bush2 = new SnTransform);
+		group_bush2->add(new SnModel(bush2));
+		group_bush2->top<SnModel>()->color(GsColor::green);
+		transf_bush2->get().translation(-12, 0, 8);
+		transf_bush2->get().lcombscale(6, 6, 6);
+	}
 
-	group_bush3->separator(true);
-	group_bush3->add(transf_bush3 = new SnTransform);
-	group_bush3->add(new SnModel(bush3));
-	group_bush3->top<SnModel>()->color(GsColor::green);
-	transf_bush3->get().translation(9, 0, 20);
-	transf_bush3->get().lcombscale(5, 7, 4);
-
-	group_bush4->separator(true);
-	group_bush4->add(transf_bush4 = new SnTransform);
-	group_bush4->add(new SnModel(bush4));
-	group_bush4->top<SnModel>()->color(GsColor::green);
-	transf_bush4->get().translation(-5, 0, -20);
-	transf_bush4->get().lcombscale(3, 6, 4);
-
-	group_bush5->separator(true);
-	group_bush5->add(transf_bush5 = new SnTransform);
-	group_bush5->add(new SnModel(bush5));
-	group_bush5->top<SnModel>()->color(GsColor::green);
-	transf_bush5->get().translation(-8, 0, -10);
-	transf_bush5->get().lcombscale(6, 6, 6);
-
-	group_bush6->separator(true);
-	group_bush6->add(transf_bush6 = new SnTransform);
-	group_bush6->add(new SnModel(bush6));
-	group_bush6->top<SnModel>()->color(GsColor::green);
-	transf_bush6->get().translation(15, 0, -9);
-	transf_bush6->get().lcombscale(4, 6, 5);
-
-	group_bush7->separator(true);
-	group_bush7->add(transf_bush7 = new SnTransform);
-	group_bush7->add(new SnModel(bush7));
-	group_bush7->top<SnModel>()->color(GsColor::green);
-	transf_bush7->get().translation(-18, 0, 14);
-	transf_bush7->get().lcombscale(9, 9, 9);
-
-	group_bush8->separator(true);
-	group_bush8->add(transf_bush8 = new SnTransform);
-	group_bush8->add(new SnModel(bush8));
-	group_bush8->top<SnModel>()->color(GsColor::green);
-	transf_bush8->get().translation(18, 0, 6);
-	transf_bush8->get().lcombscale(6, 3, 8);
-
-	group_bush9->separator(true);
-	group_bush9->add(transf_bush9 = new SnTransform);
-	group_bush9->add(new SnModel(bush9));
-	group_bush9->top<SnModel>()->color(GsColor::green);
-	transf_bush9->get().translation(10, 0, 7);
-	transf_bush9->get().lcombscale(4, 6, 5);
-
-	//this is the grass texture 
-	//some change
-	//Changing material seems to do some stuff. PerGroup crashes the program. Flat doesnt work well, but i could get smooth to kind of work.
+	//this is the grass model and texture
+	{
+		ground.V.size(4);
+		ground.F.size(2);
+		ground.N.size(2);
+		ground.V[0] = GsVec(30, 0, 30);
+		ground.V[1] = GsVec(30, 0, -30);
+		ground.V[2] = GsVec(-30, 0, -30);
+		ground.V[3] = GsVec(-30, 0, 30);
+		ground.F[0] = GsModel::Face(0, 1, 2);
+		ground.F[1] = GsModel::Face(2, 3, 0);
+		ground.N[0] = GsVec(0, 1, 0);
+		ground.N[1] = GsVec(0, 1, 0);
+		ground.culling = false;
 	
-	ground.V.size(4);
-	ground.F.size(2);
-	ground.N.size(2);
-	ground.V[0] = GsVec(30, 0, 30);
-	ground.V[1] = GsVec(30, 0, -30);
-	ground.V[2] = GsVec(-30, 0, -30);
-	ground.V[3] = GsVec(-30, 0, 30);
-	ground.F[0] = GsModel::Face(0, 1, 2);
-	ground.F[1] = GsModel::Face(2, 3, 0);
-	ground.N[0] = GsVec(0, 1, 0);
-	ground.N[1] = GsVec(0, 1, 0);
-	ground.culling = false;
 
 	GsModel::Group& g = *ground.G.push();
 	g.fi = 0;
@@ -254,18 +262,13 @@ void MyViewer::build_scene ()
 		
 	ground.set_mode(GsModel::Flat, GsModel::PerGroupMtl);
 	ground.textured = true;
-	
+	}
+
 	rootg()->add(group_torso);
+	rootg()->add(group_shadow_torso);
 	rootg()->add(group_bush1);
 	rootg()->add(group_bush2);
-	rootg()->add(group_bush3);
-	rootg()->add(group_bush4);
-	rootg()->add(group_bush5);
-	rootg()->add(group_bush6);
-	rootg()->add(group_bush7);
-	rootg()->add(group_bush8);
-	rootg()->add(group_bush9);
-
+	
 }
 
 void MyViewer::move_left_leg() {
@@ -284,6 +287,7 @@ void MyViewer::move_left_leg() {
 
 
 	transf_left_leg->set(transform);
+	
 }
 
 void MyViewer::move_right_leg() {
@@ -324,6 +328,7 @@ void MyViewer::move_left_arm() {
 	
 	transform.mult(transform, translate);
 	transf_left_arm->set(transform);
+	transf_shadow_left_arm->set(transform);
 }
 
 void MyViewer::move_right_arm() {
@@ -344,6 +349,7 @@ void MyViewer::move_right_arm() {
 
 	transform.mult(transform, translate);
 	transf_right_arm->set(transform);
+	transf_shadow_right_arm->set(transform);
 }
 
 void MyViewer::move_head() {
@@ -370,9 +376,21 @@ void MyViewer::move_forward() {
 	GsMat translate;
 	GsMat transform = GsMat();
 	GsMat currentMat = transf_torso->get();
-	translate.translation((float)sin(GS_TORAD(orientation)), 0.0f, (float)cos(GS_TORAD(orientation)));
+	translate.translation(0, 0, 1);
 	transform.mult(currentMat, translate);
 	transf_torso->set(transform);
+
+	rot = GsMat();
+	transform = GsMat();
+	currentMat = transf_shadow->get();
+	
+	translate.translation((float)sin(GS_TORAD(shadowOrientation)), -(float)cos(GS_TORAD(shadowOrientation)), 0);
+	//gsout << "Orientation: " << orientation << gsnl;
+	transform.mult(currentMat, translate);
+	transf_shadow->set(transform);
+
+	//transform.mult(currentMat, rot);
+	//transf_shadow->set(transform);
 
 	llRotNum = llRotNum + (legIncreasing ? 4 : -4);
 	rlRotNum = rlRotNum + (legIncreasing ? -4 : 4);
@@ -395,27 +413,40 @@ void MyViewer::move_backward() {
 	GsMat translate;
 	GsMat transform = GsMat();
 	GsMat currentMat = transf_torso->get();
-	translate.translation(-(float)sin(GS_TORAD(orientation)), 0.0f, -(float)cos(GS_TORAD(orientation)));
+	translate.translation(0, 0, -1);
 	transform.mult(currentMat, translate);
 	transf_torso->set(transform);
 
-	llRotNum = llRotNum + (legIncreasing ? -4 : 4);
-	rlRotNum = rlRotNum + (legIncreasing ? 4 : -4);
-	laRotNum = laRotNum + (armIncreasing ? 3 : -3);
-	raRotNum = raRotNum + (armIncreasing ? -3 : 3);
+	rot = GsMat();
+	transform = GsMat();
+	currentMat = transf_shadow->get();
 
-	if (llRotNum >= 20 || llRotNum <= -20) legIncreasing = !legIncreasing;
-	if (laRotNum >= 15 || laRotNum <= -15)armIncreasing = !armIncreasing;
-	
+	translate.translation(-(float)sin(GS_TORAD(shadowOrientation)), (float)cos(GS_TORAD(shadowOrientation)), 0);
+	//gsout << "Orientation: " << orientation << gsnl;
+	transform.mult(currentMat, translate);
+	transf_shadow->set(transform);
+
+	//transform.mult(currentMat, rot);
+	//transf_shadow->set(transform);
+
+	llRotNum = llRotNum + (legIncreasing ? 4 : -4);
+	rlRotNum = rlRotNum + (legIncreasing ? -4 : 4);
+	laRotNum = laRotNum + (armIncreasing ? -3 : 3);
+	raRotNum = raRotNum + (armIncreasing ? 3 : -3);
+	if (llRotNum >= 20 || llRotNum <= -20)
+		legIncreasing = !legIncreasing;
+
+	if (laRotNum >= 15 || laRotNum <= -15)
+		armIncreasing = !armIncreasing;
+
 	move_left_leg();
 	move_right_leg();
 	move_left_arm();
 	move_right_arm();
-
 }
 
 void MyViewer::rotate_torso_left() {
-	//orientation += 5;
+	shadowOrientation += 5;
 	GsMat rot;
 	GsMat translate;
 	GsMat transform = GsMat();
@@ -463,6 +494,54 @@ void MyViewer::rotate_torso_left() {
 }
 
 void MyViewer::rotate_torso_right() {
+	shadowOrientation -= 5;
+	GsMat rot;
+	GsMat translate;
+	GsMat transform = GsMat();
+	GsMat currentMat = transf_torso->get();
+	rot.roty(GS_TORAD(-5));
+	transform.mult(currentMat, rot);
+	transf_torso->set(transform);
+
+	if (llRotNum >= -4 && llRotNum <= 4 && rlRotNum >= -4 && rlRotNum <= 4 && laRotNum >= -3 && laRotNum <= 3 && raRotNum >= -3 && raRotNum <= 3)
+	{
+		llRotNum = llRotNum + (legIncreasing ? 4 : -4);
+		rlRotNum = rlRotNum + (legIncreasing ? -4 : 4);
+		laRotNum = laRotNum + (armIncreasing ? -3 : 3);
+		raRotNum = raRotNum + (armIncreasing ? 3 : -3);
+
+		if (llRotNum >= 4 || llRotNum <= -4) legIncreasing = !legIncreasing;
+		if (laRotNum >= 3 || laRotNum <= -3) armIncreasing = !armIncreasing;
+	}
+	else if (llRotNum < -4 && rlRotNum > 4)
+	{
+		llRotNum += 8;
+		rlRotNum -= 8;
+	}
+	else if (llRotNum > 4 && rlRotNum < -4)
+	{
+		rlRotNum += 8;
+		llRotNum -= 8;
+	}
+	else if (laRotNum < -3 && raRotNum > 3)
+	{
+		laRotNum += 6;
+		raRotNum -= 6;
+	}
+	else if (laRotNum > 3 && raRotNum < -3)
+	{
+		raRotNum += 6;
+		laRotNum -= 6;
+	}
+
+	move_left_leg();
+	move_right_leg();
+	move_left_arm();
+	move_right_arm();
+}
+
+
+void MyViewer::move_shadow() {
 	//orientation -= 5;
 	GsMat rot;
 	GsMat translate;
@@ -519,7 +598,7 @@ void MyViewer::switch_camera() {
 	rotationx.mult(rotationx, rotationy);
 
 	camera_num %= 3;
-	gsout << camera_num;
+	//gsout << camera_num;
 	switch (camera_num)
 	{
 	case 0:
